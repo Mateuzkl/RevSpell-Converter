@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Spell Converter - RevScript</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --bg-card: #111827;
+      --accent: #2563eb;
+      --accent-soft: #1d4ed8;
+      --border: #1f2937;
+      --text: #e5e7eb;
+      --text-soft: #9ca3af;
+      --danger: #ef4444;
+      --success: #22c55e;
+      --radius: 10px;
+      --shadow: 0 18px 45px rgba(0, 0, 0, 0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      font-size: 16px;
+      background: #020617;
+      color: var(--text);
+      overflow: hidden;
+    }
+
+    .app {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(145deg, #020617 0%, #020617 40%, #0b1120 100%);
+      padding: 24px;
+      display: grid;
+      grid-template-columns: 400px 1fr;
+      gap: 24px;
+      overflow: hidden;
+    }
+
+    .left,
+    .right {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      height: 100%;
+      overflow-y: auto;
+      padding-right: 8px;
+    }
+
+    /* Scrollbar styling for Webkit */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.5);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(55, 65, 81, 0.8);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(75, 85, 99, 1);
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 8px;
+    }
+
+    .logo {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: radial-gradient(circle at 30% 0%, #60a5fa, #1d4ed8 45%, #020617 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 24px;
+      color: #eff6ff;
+      box-shadow: 0 0 25px rgba(37, 99, 235, 0.7);
+    }
+
+    .title-block {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    h1 {
+      font-size: 24px;
+      margin: 0;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #e5e7eb;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: var(--text-soft);
+    }
+
+    .card {
+      background: radial-gradient(circle at 0 0, rgba(37, 99, 235, 0.22) 0, rgba(15, 23, 42, 0.96) 36%, #020617 120%);
+      border-radius: var(--radius);
+      padding: 20px;
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(circle at 120% -20%, rgba(56, 189, 248, 0.12), transparent 55%);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: #9ca3af;
+    }
+
+    .badge {
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(37, 99, 235, 0.12);
+      color: #93c5fd;
+      font-size: 12px;
+      border: 1px solid rgba(37, 99, 235, 0.35);
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    label {
+      font-size: 14px;
+      color: var(--text-soft);
+    }
+
+    input[type="file"],
+    input[type="text"] {
+      background: rgba(15, 23, 42, 0.9);
+      border-radius: 8px;
+      border: 1px solid rgba(31, 41, 55, 1);
+      padding: 10px 12px;
+      font-size: 14px;
+      color: var(--text);
+      outline: none;
+      width: 100%;
+    }
+
+    input[type="file"] {
+      padding: 5px 7px;
+    }
+
+    input[type="file"]::-webkit-file-upload-button {
+      border: none;
+      background: linear-gradient(135deg, #1d4ed8, #3b82f6);
+      color: white;
+      padding: 5px 10px;
+      margin-right: 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 10px 20px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.11em;
+      transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.2s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #1d4ed8, #3b82f6);
+      color: white;
+      box-shadow: 0 12px 35px rgba(37, 99, 235, 0.4);
+      width: 100%;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 40px rgba(37, 99, 235, 0.55);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+      box-shadow: 0 10px 26px rgba(37, 99, 235, 0.35);
+    }
+
+    .btn-secondary {
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text-soft);
+      border: 1px solid rgba(55, 65, 81, 1);
+      padding-inline: 10px;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(17, 24, 39, 1);
+    }
+
+    .status-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+      color: var(--text-soft);
+      margin-top: 2px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--success);
+      box-shadow: 0 0 12px rgba(34, 197, 94, 0.7);
+      margin-right: 6px;
+    }
+
+    .status-ok,
+    .status-warn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .status-warn .dot {
+      background: #facc15;
+      box-shadow: 0 0 12px rgba(250, 204, 21, 0.7);
+    }
+
+    .spells-list {
+      max-height: 250px;
+      overflow: auto;
+      border-radius: 8px;
+      border: 1px solid rgba(31, 41, 55, 1);
+      background: rgba(15, 23, 42, 0.9);
+      font-size: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 8px 12px;
+      text-align: left;
+      border-bottom: 1px solid rgba(31, 41, 55, 1);
+    }
+
+    th {
+      position: sticky;
+      top: 0;
+      background: #020617;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-soft);
+    }
+
+    tr:nth-child(even) td {
+      background: rgba(15, 23, 42, 0.7);
+    }
+
+    .tag {
+      display: inline-flex;
+      padding: 1px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(55, 65, 81, 1);
+      background: rgba(17, 24, 39, 0.9);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #9ca3af;
+    }
+
+    .tag-attack {
+      border-color: #f97316;
+      color: #fed7aa;
+    }
+
+    .tag-support {
+      border-color: #22c55e;
+      color: #bbf7d0;
+    }
+
+    .tag-healing {
+      border-color: #38bdf8;
+      color: #bae6fd;
+    }
+
+    .pill {
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(31, 41, 55, 1);
+      padding: 3px 8px;
+      font-size: 11px;
+      color: var(--text-soft);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .output-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .tabs {
+      display: inline-flex;
+      padding: 2px;
+      background: rgba(15, 23, 42, 0.9);
+      border-radius: 999px;
+      border: 1px solid rgba(31, 41, 55, 1);
+      gap: 2px;
+    }
+
+    .tab {
+      border-radius: 999px;
+      padding: 3px 10px;
+      font-size: 11px;
+      border: none;
+      cursor: pointer;
+      background: transparent;
+      color: var(--text-soft);
+    }
+
+    .tab.active {
+      background: linear-gradient(135deg, #1d4ed8, #3b82f6);
+      color: white;
+    }
+
+    .code {
+      background: #020617;
+      border-radius: 10px;
+      border: 1px solid rgba(31, 41, 55, 1);
+      padding: 14px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
+      font-size: 14px;
+      color: #e5e7eb;
+      max-height: 400px;
+      overflow: auto;
+      position: relative;
+    }
+
+    .code pre {
+      margin: 0;
+      white-space: pre;
+    }
+
+    .log {
+      background: #020617;
+      border-radius: 10px;
+      border: 1px solid rgba(31, 41, 55, 1);
+      padding: 10px;
+      font-family: ui-monospace, monospace;
+      font-size: 13px;
+      color: #9ca3af;
+      max-height: 160px;
+      overflow: auto;
+      white-space: pre-wrap;
+    }
+
+    .progress {
+      margin-top: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 1);
+      overflow: hidden;
+      border: 1px solid rgba(31, 41, 55, 1);
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      border-radius: inherit;
+      background: linear-gradient(to right, #22c55e, #65a30d);
+      box-shadow: 0 0 18px rgba(34, 197, 94, 0.75);
+      transition: width 0.15s ease-out;
+    }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 6px;
+      font-size: 13px;
+      color: #6b7280;
+    }
+
+    .link {
+      color: #60a5fa;
+      text-decoration: none;
+    }
+
+    .link:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 880px) {
+      .app {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <div class="left">
+      <div class="header">
+        <div class="logo">S</div>
+        <div class="title-block">
+          <h1>Spell Converter</h1>
+          <div class="subtitle">TFS 1.5 · 8.60 · XML → RevScript (Tauri)</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Entrada</div>
+          <span class="badge">Passo 1 · spells.xml</span>
+        </div>
+
+        <div class="field">
+          <label>Selecione a pasta contendo <b>spells.xml</b></label>
+          <!-- REPLACED FILE INPUT WITH BUTTON -->
+          <button class="btn btn-primary" id="selectFolderBtn" style="margin-bottom: 5px;">
+            📂 Escolher Pasta
+          </button>
+        </div>
+
+        <div class="field">
+          <label>Pasta selecionada:</label>
+          <input type="text" id="basePath" placeholder="Nenhuma pasta selecionada" readonly />
+        </div>
+
+        <div class="status-line">
+          <span class="status-warn">
+            <span class="dot"></span>
+            <span id="statusText">Aguardando pasta...</span>
+          </span>
+          <span id="spellCount">0 spells</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Spells detectadas</div>
+          <span class="badge" id="badgeMode">Tauri Mode</span>
+        </div>
+
+        <div class="spells-list">
+          <table>
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Grupo</th>
+                <th>Level</th>
+                <th>Mana</th>
+                <th>Voc.</th>
+              </tr>
+            </thead>
+            <tbody id="spellsTableBody">
+              <!-- preenchido via JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <div class="status-line">
+          <span class="pill">
+            ID base: <input type="text" id="baseId" value="100"
+              style="width:60px;border:none;background:transparent;padding:0 2px;color:#e5e7eb;font-size:13px;" />
+          </span>
+          <button class="btn btn-primary" id="convertBtn">
+            Salvar RevScripts
+          </button>
+        </div>
+
+        <div class="progress">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="right">
+      <div class="card">
+        <div class="output-header">
+          <div class="card-title">Saída · RevScript (preview)</div>
+          <div class="tabs">
+            <button class="tab active" data-tab="single">Spell selecionada</button>
+            <button class="tab" data-tab="all">Todas (concat)</button>
+          </div>
+        </div>
+
+        <div class="code" id="codeBox">
+          <pre id="codeOutput">-- Selecione uma pasta e clique em "Salvar RevScripts".</pre>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Log</div>
+          <span class="badge">Simulação (Tauri)</span>
+        </div>
+        <div class="log" id="logBox"></div>
+        <div class="footer">
+          <span>Os arquivos serão salvos na subpasta <b>/saida</b>.</span>
+          <button class="btn btn-secondary" id="clearLogBtn">Limpar log</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Estrutura interna de spell
+    class SpellData {
+      constructor() {
+        this.name = "";
+        this.words = "";
+        this.group = "";
+        this.level = 0;
+        this.mana = 0;
+        this.soul = null;
+        this.premium = false;
+        this.selftarget = false;
+        this.cooldown = 0;
+        this.groupcooldown = null;
+        this.needlearn = false;
+        this.aggressive = null;
+        this.blockwalls = null;
+        this.range = null;
+        this.vocations = [];
+        this.scriptPath = "";
+        this.id = 0;
+      }
+    }
+
+    const selectFolderBtn = document.getElementById("selectFolderBtn");
+    const basePathInput = document.getElementById("basePath");
+    const statusText = document.getElementById("statusText");
+    const spellCount = document.getElementById("spellCount");
+    const tableBody = document.getElementById("spellsTableBody");
+    const codeOutput = document.getElementById("codeOutput");
+    const convertBtn = document.getElementById("convertBtn");
+    const progressBar = document.getElementById("progressBar");
+    const logBox = document.getElementById("logBox");
+    const clearLogBtn = document.getElementById("clearLogBtn");
+    const baseIdInput = document.getElementById("baseId");
+    const tabs = document.querySelectorAll(".tab");
+
+    let spells = [];
+    let lastAllCode = "";
+    let pastaEntrada = "";
+
+    // --- TAURI SETUP ---
+    let tauriAPI = null;
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (window.__TAURI__) {
+        tauriAPI = window.__TAURI__;
+        // Fix for Tauri v2 where invoke is in .core
+        if (!tauriAPI.invoke && tauriAPI.core) {
+          tauriAPI.invoke = tauriAPI.core.invoke;
+        }
+        console.log('Tauri API carregada com sucesso!');
+      } else {
+        console.error('Tauri API não encontrada. Rodando em modo browser?');
+      }
+    });
+
+    function log(msg) {
+      const time = new Date().toLocaleTimeString();
+      logBox.textContent += `[${time}] ${msg}\n`;
+      logBox.scrollTop = logBox.scrollHeight;
+    }
+
+    function clearTable() {
+      tableBody.innerHTML = "";
+    }
+
+    function updateTable() {
+      clearTable();
+      spells.forEach((s, index) => {
+        const tr = document.createElement("tr");
+        tr.style.cursor = "pointer";
+        tr.addEventListener("click", () => {
+          const code = generateSingleSpellRevScript(s);
+          codeOutput.textContent = code;
+        });
+
+        const vocShort = s.vocations.length
+          ? s.vocations.map(v => v.split(";")[0]).join(", ")
+          : "-";
+
+        const groupClass =
+          s.group === "attack"
+            ? "tag tag-attack"
+            : s.group === "support"
+              ? "tag tag-support"
+              : s.group === "healing"
+                ? "tag tag-healing"
+                : "tag";
+
+        tr.innerHTML = `
+          <td>${s.name || "-"}</td>
+          <td><span class="${groupClass}">${s.group || "-"}</span></td>
+          <td>${s.level || "-"}</td>
+          <td>${s.mana || "-"}</td>
+          <td>${vocShort}</td>
+        `;
+        tableBody.appendChild(tr);
+      });
+    }
+
+    function parseBoolAttr(value, defaultVal) {
+      if (value === null || value === undefined || value === "") return defaultVal;
+      if (value === "1" || value === "true" || value === "yes") return true;
+      if (value === "0" || value === "false" || value === "no") return false;
+      return defaultVal;
+    }
+
+    function mapVocationToRev(vocName) {
+      const lower = vocName.toLowerCase();
+      if (lower === "sorcerer") return ["sorcerer;true", "master sorcerer;true"];
+      if (lower === "druid") return ["druid;true", "elder druid;true"];
+      if (lower === "paladin") return ["paladin;true", "royal paladin;true"];
+      if (lower === "knight") return ["knight;true", "elite knight;true"];
+      // Retorno genérico
+      return [`${lower};true`];
+    }
+
+    function parseSpellsXml(text) {
+      const parser = new DOMParser();
+      const xml = parser.parseFromString(text, "application/xml");
+
+      const errors = xml.getElementsByTagName("parsererror");
+      if (errors.length) {
+        throw new Error("XML inválido");
+      }
+
+      const instants = Array.from(xml.getElementsByTagName("instant"));
+      const runes = Array.from(xml.getElementsByTagName("rune"));
+
+      const all = [];
+
+      function processNode(node, type) {
+        const s = new SpellData();
+        s.name = node.getAttribute("name") || "";
+        s.words = node.getAttribute("words") || "";
+        s.group = node.getAttribute("group") || (type === "rune" ? "attack" : "");
+        s.level = parseInt(node.getAttribute("level") || "0", 10);
+        s.mana = parseInt(node.getAttribute("mana") || "0", 10);
+        const soulAttr = node.getAttribute("soul");
+        s.soul = soulAttr ? parseInt(soulAttr, 10) : null;
+        s.premium = parseBoolAttr(node.getAttribute("premium"), false);
+        s.selftarget = parseBoolAttr(node.getAttribute("selftarget"), false);
+        s.cooldown = parseInt(node.getAttribute("cooldown") || "0", 10);
+        const gc = node.getAttribute("groupcooldown");
+        s.groupcooldown = gc ? parseInt(gc, 10) : null;
+        s.needlearn = parseBoolAttr(node.getAttribute("needlearn"), false);
+        const agg = node.getAttribute("aggressive");
+        s.aggressive = agg != null ? parseBoolAttr(agg, true) : null;
+        const bw = node.getAttribute("blockwalls");
+        s.blockwalls = bw != null ? parseBoolAttr(bw, false) : null;
+        const rangeAttr = node.getAttribute("range");
+        s.range = rangeAttr ? parseInt(rangeAttr, 10) : null;
+        s.scriptPath = node.getAttribute("script") || "";
+
+        const vocNodes = Array.from(node.getElementsByTagName("vocation"));
+        const vocsFormatted = [];
+        vocNodes.forEach(v => {
+          const name = v.getAttribute("name");
+          if (!name) return;
+          const mapped = mapVocationToRev(name);
+          mapped.forEach(m => {
+            if (!vocsFormatted.includes(m)) {
+              vocsFormatted.push(m);
+            }
+          });
+        });
+        s.vocations = vocsFormatted;
+
+        all.push(s);
+      }
+
+      instants.forEach(n => processNode(n, "instant"));
+      runes.forEach(n => processNode(n, "rune"));
+
+      return all;
+    }
+
+    function generateSingleSpellRevScript(s, originalLua) {
+      const baseId = parseInt(baseIdInput.value || "100", 10);
+      const idx = spells.indexOf(s);
+      const id = baseId + (idx >= 0 ? idx : 0);
+      s.id = id;
+
+      const isRune = false;
+
+      const vocStr = s.vocations.length
+        ? s.vocations.map(v => `"${v}"`).join(", ")
+        : "";
+
+      const parts = [];
+
+      parts.push("-- gerado por Spell Converter");
+      if (originalLua) {
+        parts.push(originalLua);
+      } else {
+        parts.push("-- [Aviso] Script original não encontrado, lógica genérica inserida.");
+        parts.push("local combat = Combat()");
+        parts.push("combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_ENERGYDAMAGE)");
+        parts.push("combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_ENERGYAREA)");
+        parts.push("");
+        parts.push("function onGetFormulaValues(player, level, maglevel)");
+        parts.push("\tlocal min = (level / 5) + (maglevel * 1.4) + 8");
+        parts.push("\tlocal max = (level / 5) + (maglevel * 2.2) + 14");
+        parts.push("\treturn -min, -max");
+        parts.push("end");
+        parts.push("");
+        parts.push("combat:setCallback(CALLBACK_PARAM_LEVELMAGICVALUE, \"onGetFormulaValues\")");
+        parts.push("");
+        parts.push("local spell = Spell(\"instant\")");
+        parts.push("");
+        parts.push("function spell.onCastSpell(creature, variant)");
+        parts.push("\treturn combat:execute(creature, variant)");
+        parts.push("end");
+      }
+      parts.push("");
+      if (!originalLua) {
+        // Se não tinha lua original, assume que o código já fechou. Mas se inserimos o combat, precisamos declarar a spell dps.
+        // O código acima já declara 'local spell = Spell...'
+        // Se TIVER originalLua, assumimos que o original lua define 'combat' e a função de callback, mas NÃO registra a spell.
+        // Adaptar scripts antigos é complexo, aqui vamos assumir que o usuário só quer o wrapper revscript.
+        // Para simplificar: se tem originalLua, a gente APENAS anexa o wrapper RevScript no final referenciando o combat?
+        // Scripts antigos geralmente retornam TRUE/FALSE no onCastSpell.
+        // RevScript novo define 'local spell = Spell(...)'.
+      }
+
+      // Se nao injetamos o spell block no 'else' acima, injetamos agora
+      if (originalLua) {
+        parts.push("");
+        parts.push(`local spell = Spell("${isRune ? "rune" : "instant"}")`);
+        parts.push("");
+        parts.push("function spell.onCastSpell(creature, variant)");
+        parts.push("\t-- Tente adaptar a chamada do combat antigo aqui se possível");
+        parts.push("\t-- return combat:execute(creature, variant)");
+        parts.push("\treturn true");
+        parts.push("end");
+      }
+
+
+      // Configuração da Spell (Meta dados)
+      if (s.group) {
+        parts.push(`spell:group("${s.group}")`);
+      }
+      parts.push(`spell:id(${id})`);
+      if (s.name) {
+        parts.push(`spell:name("${s.name}")`);
+      }
+      if (s.words) {
+        parts.push(`spell:words("${s.words}")`);
+      }
+      if (s.level) {
+        parts.push(`spell:level(${s.level})`);
+      }
+      if (s.mana) {
+        parts.push(`spell:mana(${s.mana})`);
+      }
+      if (s.soul !== null) {
+        parts.push(`spell:soul(${s.soul})`);
+      }
+      if (s.premium) {
+        parts.push("spell:isPremium(true)");
+      }
+      if (s.selftarget) {
+        parts.push("spell:isSelfTarget(true)");
+      }
+      if (s.cooldown) {
+        const sec = Math.round(s.cooldown / 1000);
+        parts.push(`spell:cooldown(${sec} * 1000)`);
+      }
+      if (s.groupcooldown) {
+        const secg = Math.round(s.groupcooldown / 1000);
+        parts.push(`spell:groupCooldown(${secg} * 1000)`);
+      }
+      parts.push(`spell:needLearn(${s.needlearn ? "true" : "false"})`);
+      if (s.aggressive !== null) {
+        parts.push(`spell:isAggressive(${s.aggressive ? "true" : "false"})`);
+      }
+      if (s.range !== null) {
+        parts.push(`spell:range(${s.range})`);
+      }
+      if (vocStr) {
+        parts.push(`spell:vocation(${vocStr})`);
+      }
+      parts.push("spell:register()");
+      parts.push("");
+
+      return parts.join("\n");
+    }
+
+    function generateAllCode() {
+      const all = spells.map(s => `-- ${s.name}\n${generateSingleSpellRevScript(s)}`).join("\n\n");
+      lastAllCode = all;
+      return all;
+    }
+
+    // --- TAURI INTEGRATION ---
+
+    selectFolderBtn.addEventListener("click", async () => {
+      try {
+        if (!tauriAPI) {
+          alert("Tauri API ainda não carregou ou não foi encontrada.");
+          return;
+        }
+
+        const folder = await tauriAPI.invoke('select_folder');
+        if (!folder) return; // cancelado
+
+        pastaEntrada = folder;
+        basePathInput.value = folder;
+
+        statusText.textContent = "Lendo spells.xml...";
+        statusText.parentElement.classList.add("status-warn");
+
+        // Tenta ler spells.xml
+        // Caminho pode ser pasta/spells.xml
+        // Nota: para compatibilidade melhor, o correto seria usar path.join no backend, mas aqui concat é aceitável se for Windows.
+        // Vamos assumir separador "/" ou "\"
+        const sep = folder.includes("\\") ? "\\" : "/";
+        const xmlPath = `${folder}${sep}spells.xml`;
+
+        try {
+          const xmlContent = await tauriAPI.invoke('read_file', { path: xmlPath });
+          spells = parseSpellsXml(xmlContent);
+          spellCount.textContent = `${spells.length} spells`;
+          statusText.textContent = "XML carregado OK!";
+          statusText.parentElement.classList.remove("status-warn");
+          statusText.parentElement.classList.add("status-ok");
+          updateTable();
+          log(`Lido spells.xml com ${spells.length} entradas.`);
+
+          // Listando scripts lua como teste
+          const scriptsPath = `${folder}${sep}scripts`;
+          try {
+            const luaFiles = await tauriAPI.invoke('list_files', { folder: scriptsPath, extension: 'lua' });
+            log(`Encontrados ${luaFiles.length} arquivos .lua na pasta scripts.`);
+          } catch (err) {
+            log("Pasta 'scripts' não encontrada ou vazia: " + err);
+          }
+
+          if (spells.length) {
+            codeOutput.textContent = generateSingleSpellRevScript(spells[0]);
+          }
+
+        } catch (err) {
+          statusText.textContent = "Erro ao ler spells.xml";
+          log("Falha ao abrir spells.xml: " + err);
+          spells = [];
+          updateTable();
+        }
+
+      } catch (err) {
+        alert('Erro Tauri: ' + err);
+      }
+    });
+
+    convertBtn.addEventListener("click", async () => {
+      if (!spells.length) {
+        alert("Carregue as spells primeiro!");
+        return;
+      }
+      if (!pastaEntrada) {
+        alert("Pasta de entrada não definida.");
+        return;
+      }
+
+      const sep = pastaEntrada.includes("\\") ? "\\" : "/";
+      const outputFolder = `${pastaEntrada}${sep}saida`;
+
+      log(`Iniciando conversão de ${spells.length} spells...`);
+      progressBar.style.width = "0%";
+
+      let i = 0;
+      const total = spells.length;
+
+      async function step() {
+        if (i >= total) {
+          progressBar.style.width = "100%";
+          log(`Concluído! Arquivos salvos em: ${outputFolder}`);
+          alert("Processo finalizado!");
+          return;
+        }
+
+        const spell = spells[i];
+        let content = "";
+
+        // Tentar ler o script original se existir path
+        let originalLua = "";
+        if (spell.scriptPath) {
+          const scriptAbsPath = `${pastaEntrada}${sep}scripts${sep}${spell.scriptPath}`;
+          // tenta ler
+          try {
+            originalLua = await tauriAPI.invoke('read_file', { path: scriptAbsPath });
+          } catch (e) {
+            // ignorar erro, usa template
+            log(`[Aviso] Script não achado: ${spell.scriptPath}`);
+          }
+        }
+
+        content = generateSingleSpellRevScript(spell, originalLua);
+
+        // Nome do arquivo de saída
+        let outName = spell.scriptPath
+          ? spell.scriptPath.replace(/\//g, "_").replace(/\\/g, "_")
+          : `spell_${spell.id}.lua`;
+
+        // Se scriptPath for algo como "attack/berserk.lua", a gente salva como "attack_berserk.lua" ou cria pasta?
+        // Simplificação: salvar tudo flat na pasta de saida ou manter estrutura?
+        // User disse "save_file(path, content)". O backend cria pastas pais.
+        // Vamos tentar manter a estrutura relativa se possível ou só jogar na raiz da saida.
+        // Vamos usar o nome da spell sanitizado para garantir
+        // Se scriptPath existe, usa ele. "attack/berserk.lua" -> "saida/attack/berserk.lua"
+
+        let relPath = spell.scriptPath || `custom/${spell.name.replace(/\s+/g, '_')}.lua`;
+        const finalPath = `${outputFolder}${sep}${relPath}`;
+
+        try {
+          await tauriAPI.invoke('save_file', { path: finalPath, content: content });
+        } catch (e) {
+          log(`Erro ao salvar ${relPath}: ${e}`);
+        }
+
+        i++;
+        const pct = Math.round((i / total) * 100);
+        progressBar.style.width = pct + "%";
+
+        // Pequeno delay para não travar UI e ver a barra andar (opcional, pode ser removido pra velocidade máxima)
+        if (i % 5 === 0) {
+          setTimeout(step, 10);
+        } else {
+          step();
+        }
+      }
+
+      step();
+    });
+
+    clearLogBtn.addEventListener("click", () => {
+      logBox.textContent = "";
+    });
+
+    tabs.forEach(tab => {
+      tab.addEventListener("click", () => {
+        tabs.forEach(t => t.classList.remove("active"));
+        tab.classList.add("active");
+        if (tab.dataset.tab === "single") {
+          if (spells.length) {
+            codeOutput.textContent = generateSingleSpellRevScript(spells[0]);
+          } else {
+            codeOutput.textContent = "-- Nenhuma spell carregada.";
+          }
+        } else {
+          // all
+          if (!lastAllCode && spells.length) {
+            lastAllCode = generateAllCode();
+          }
+          codeOutput.textContent = lastAllCode || "-- Nenhuma spell carregada.";
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>
