@@ -55,19 +55,21 @@
       padding-right: 8px;
     }
 
-    /* Scrollbar styling for Webkit */
     ::-webkit-scrollbar {
       width: 8px;
       height: 8px;
     }
+
     ::-webkit-scrollbar-track {
       background: rgba(15, 23, 42, 0.5);
       border-radius: 4px;
     }
+
     ::-webkit-scrollbar-thumb {
       background: rgba(55, 65, 81, 0.8);
       border-radius: 4px;
     }
+
     ::-webkit-scrollbar-thumb:hover {
       background: rgba(75, 85, 99, 1);
     }
@@ -83,14 +85,29 @@
       width: 48px;
       height: 48px;
       border-radius: 12px;
-      background: radial-gradient(circle at 30% 0%, #60a5fa, #1d4ed8 45%, #020617 100%);
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 700;
+      box-shadow: 0 0 25px rgba(37, 99, 235, 0.25);
+    }
+    .logo img {
+      width: 100%;
+      height: 100%;
+      border-radius: 12px;
+      object-fit: cover;
+      display: none;
+    }
+    .logo-text {
       font-size: 24px;
       color: #eff6ff;
-      box-shadow: 0 0 25px rgba(37, 99, 235, 0.7);
+      background: radial-gradient(circle at 30% 0%, #60a5fa, #1d4ed8 45%, #020617 100%);
+      width: 100%;
+      height: 100%;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .title-block {
@@ -237,6 +254,26 @@
     .btn-secondary:hover {
       background: rgba(17, 24, 39, 1);
     }
+    #clearLogBtn {
+      text-transform: none;
+      letter-spacing: 0.04em;
+      font-weight: 600;
+    }
+    .toolbar {
+      margin-left: auto;
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .select {
+      appearance: none;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(31, 41, 55, 1);
+      color: var(--text);
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 12px;
+    }
 
     .status-line {
       display: flex;
@@ -281,6 +318,15 @@
       width: 100%;
       border-collapse: collapse;
     }
+    .spells-list th:nth-child(1) { width: 15%; }
+    .spells-list th:nth-child(2) { width: 18%; }
+    .spells-list th:nth-child(3) { width: 10%; }
+    .spells-list th:nth-child(4) { width: 6%; }
+    .spells-list th:nth-child(5) { width: 6%; }
+    .spells-list th:nth-child(6) { width: 5%; }
+    .spells-list th:nth-child(7) { width: 6%; }
+    .spells-list th:nth-child(8) { width: 8%; }
+    .spells-list th:nth-child(9) { width: 20%; }
 
     th,
     td {
@@ -441,6 +487,58 @@
       text-decoration: underline;
     }
 
+    .site-footer {
+      margin-top: 12px;
+      padding: 16px 24px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text-soft);
+    }
+    .site-footer-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    .site-footer-section h3 {
+      margin: 0 0 6px 0;
+      font-size: 16px;
+      color: var(--text);
+      letter-spacing: 0.04em;
+    }
+    .site-footer-section p {
+      margin: 0;
+      font-size: 13px;
+    }
+    .site-footer-section .creation-date {
+      display: inline-block;
+      margin-top: 6px;
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+    .site-footer a.footer-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #60a5fa;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .site-footer a.footer-link:hover {
+      text-decoration: underline;
+    }
+    .site-footer-bottom {
+      border-top: 1px solid var(--border);
+      padding-top: 10px;
+      font-size: 12px;
+      color: var(--text-soft);
+      text-align: center;
+    }
+
     @media (max-width: 880px) {
       .app {
         grid-template-columns: 1fr;
@@ -453,29 +551,37 @@
   <div class="app">
     <div class="left">
       <div class="header">
-        <div class="logo">S</div>
+        <div class="logo">
+          <span class="logo-text">S</span>
+          <img id="appIcon" src="assets/icon.png" alt="Spell Converter" />
+        </div>
         <div class="title-block">
-          <h1>Spell Converter</h1>
-          <div class="subtitle">TFS 1.5 · 8.60 · XML → RevScript (Tauri)</div>
+          <h1 id="titleMain">Spell Converter</h1>
+          <div class="subtitle" id="subtitleMain">TFS 1.5 · 8.60 · XML → RevScript (Tauri)</div>
+        </div>
+        <div class="toolbar">
+          <select id="langSelect" class="select">
+            <option value="pt">PT</option>
+            <option value="en">EN</option>
+          </select>
         </div>
       </div>
 
       <div class="card">
         <div class="card-header">
-          <div class="card-title">Entrada</div>
-          <span class="badge">Passo 1 · spells.xml</span>
+          <div class="card-title" id="inputCardTitle">Entrada</div>
+          <span class="badge" id="stepBadge">Passo 1 · spells.xml</span>
         </div>
 
         <div class="field">
-          <label>Selecione a pasta contendo <b>spells.xml</b></label>
-          <!-- REPLACED FILE INPUT WITH BUTTON -->
+          <label id="selectLabel">Selecione a pasta contendo <b>spells.xml</b></label>
           <button class="btn btn-primary" id="selectFolderBtn" style="margin-bottom: 5px;">
-            📂 Escolher Pasta
+            📂 <span id="chooseFolderText">Escolher Pasta</span>
           </button>
         </div>
 
         <div class="field">
-          <label>Pasta selecionada:</label>
+          <label id="selectedPathLabel">Pasta selecionada:</label>
           <input type="text" id="basePath" placeholder="Nenhuma pasta selecionada" readonly />
         </div>
 
@@ -490,7 +596,7 @@
 
       <div class="card">
         <div class="card-header">
-          <div class="card-title">Spells detectadas</div>
+          <div class="card-title" id="detectedCardTitle">Spells detectadas</div>
           <span class="badge" id="badgeMode">Tauri Mode</span>
         </div>
 
@@ -498,26 +604,29 @@
           <table>
             <thead>
               <tr>
-                <th>Nome</th>
-                <th>Grupo</th>
-                <th>Level</th>
-                <th>Mana</th>
-                <th>Voc.</th>
+                <th id="thName">Nome</th>
+                <th id="thWords">Words</th>
+                <th id="thGroup">Grupo</th>
+                <th id="thLvl">Lvl</th>
+                <th id="thMana">Mana</th>
+                <th id="thPrem">Prem</th>
+                <th id="thRange">Range</th>
+                <th id="thCd">CD</th>
+                <th id="thScript">Script</th>
               </tr>
             </thead>
             <tbody id="spellsTableBody">
-              <!-- preenchido via JS -->
             </tbody>
           </table>
         </div>
 
         <div class="status-line">
           <span class="pill">
-            ID base: <input type="text" id="baseId" value="100"
+            <span id="baseIdLabel">ID base:</span> <input type="text" id="baseId" value="100"
               style="width:60px;border:none;background:transparent;padding:0 2px;color:#e5e7eb;font-size:13px;" />
           </span>
           <button class="btn btn-primary" id="convertBtn">
-            Salvar RevScripts
+            <span id="saveBtnText">Converter RevScripts</span>
           </button>
         </div>
 
@@ -530,10 +639,10 @@
     <div class="right">
       <div class="card">
         <div class="output-header">
-          <div class="card-title">Saída · RevScript (preview)</div>
+          <div class="card-title" id="outputTitle">Saída · RevScript (preview)</div>
           <div class="tabs">
-            <button class="tab active" data-tab="single">Spell selecionada</button>
-            <button class="tab" data-tab="all">Todas (concat)</button>
+            <button class="tab active" data-tab="single" id="tabSingle">Spell selecionada</button>
+            <button class="tab" data-tab="all" id="tabAll">Todas (concat)</button>
           </div>
         </div>
 
@@ -544,20 +653,38 @@
 
       <div class="card">
         <div class="card-header">
-          <div class="card-title">Log</div>
-          <span class="badge">Simulação (Tauri)</span>
+          <div class="card-title" id="logTitle">Log</div>
+          <span class="badge" id="simBadge">Simulação (Tauri)</span>
         </div>
         <div class="log" id="logBox"></div>
         <div class="footer">
-          <span>Os arquivos serão salvos na subpasta <b>/saida</b>.</span>
-          <button class="btn btn-secondary" id="clearLogBtn">Limpar log</button>
+          <span id="footerText">Os arquivos serão salvos na subpasta <b>/converter</b>.</span>
+          <button class="btn btn-secondary" id="clearLogBtn"><span id="clearLogText">Limpar log</span></button>
+        </div>
+      </div>
+      <div class="site-footer">
+        <div class="site-footer-grid">
+          <div class="site-footer-section info">
+            <h3>Spell Converter para TFS</h3>
+            <p>Sistema de conversão XML → RevScript para TFS.</p>
+          </div>
+          <div class="site-footer-section developer">
+            <span>Desenvolvido por</span>
+            <a href="https://github.com/Mateuzktl" target="_blank" rel="noopener noreferrer" class="footer-link">
+              <span>Mateus Roberto (@Mateuzkl)</span>
+            </a>
+            <span class="creation-date">13 de Dezembro de 2025</span>
+          </div>
+        </div>
+        <div class="site-footer-bottom">
+          <p>&copy; 2025 Spell Converter TFS. Todos os direitos reservados.</p>
         </div>
       </div>
     </div>
   </div>
 
+
   <script>
-    // Estrutura interna de spell
     class SpellData {
       constructor() {
         this.name = "";
@@ -577,6 +704,11 @@
         this.vocations = [];
         this.scriptPath = "";
         this.id = 0;
+        this.isRune = false;
+        this.isConjuringSpell = false;
+        this.runeItemId = null;
+        this.needWeapon = false;
+        this.needCasterTargetOrDirection = null;
       }
     }
 
@@ -592,24 +724,126 @@
     const clearLogBtn = document.getElementById("clearLogBtn");
     const baseIdInput = document.getElementById("baseId");
     const tabs = document.querySelectorAll(".tab");
+    const langSelect = document.getElementById("langSelect");
+    const i18n = {
+      pt: {
+        titleMain: "Spell Converter",
+        subtitleMain: "TFS 1.5 · 8.60 · XML → RevScript (Tauri)",
+        inputCardTitle: "Entrada",
+        stepBadge: "Passo 1 · spells.xml",
+        selectLabel: "Selecione a pasta contendo <b>spells.xml</b>",
+        chooseFolderText: "Escolher Pasta",
+        selectedPathLabel: "Pasta selecionada:",
+        detectedCardTitle: "Spells detectadas",
+        baseIdLabel: "ID base:",
+        saveBtnText: "Salvar RevScripts",
+        saveBtnText: "Converter RevScripts",
+        outputTitle: "Saída · RevScript (preview)",
+        tabSingle: "Spell selecionada",
+        tabAll: "Todas (concat)",
+        logTitle: "Log",
+        simBadge: "Simulação (Tauri)",
+        footerText: "Os arquivos serão salvos na subpasta <b>/converter</b>.",
+        clearLogText: "Limpar log"
+      },
+      en: {
+        titleMain: "Spell Converter",
+        subtitleMain: "TFS 1.5 · 8.60 · XML → RevScript (Tauri)",
+        inputCardTitle: "Input",
+        stepBadge: "Step 1 · spells.xml",
+        selectLabel: "Select the folder containing <b>spells.xml</b>",
+        chooseFolderText: "Choose Folder",
+        selectedPathLabel: "Selected folder:",
+        detectedCardTitle: "Detected spells",
+        baseIdLabel: "Base ID:",
+        saveBtnText: "Convert RevScripts",
+        outputTitle: "Output · RevScript (preview)",
+        tabSingle: "Selected spell",
+        tabAll: "All (concat)",
+        logTitle: "Log",
+        simBadge: "Simulation (Tauri)",
+        footerText: "Files will be saved under <b>/converter</b>.",
+        clearLogText: "Clear log"
+      }
+    };
+    function applyLang(lang) {
+      const t = i18n[lang] || i18n.pt;
+      document.getElementById("titleMain").textContent = t.titleMain;
+      document.getElementById("subtitleMain").textContent = t.subtitleMain;
+      document.getElementById("inputCardTitle").textContent = t.inputCardTitle;
+      document.getElementById("stepBadge").textContent = t.stepBadge;
+      document.getElementById("selectLabel").innerHTML = t.selectLabel;
+      document.getElementById("chooseFolderText").textContent = t.chooseFolderText;
+      document.getElementById("selectedPathLabel").textContent = t.selectedPathLabel;
+      document.getElementById("detectedCardTitle").textContent = t.detectedCardTitle;
+      document.getElementById("baseIdLabel").textContent = t.baseIdLabel;
+      document.getElementById("saveBtnText").textContent = t.saveBtnText;
+      document.getElementById("outputTitle").textContent = t.outputTitle;
+      document.getElementById("tabSingle").textContent = t.tabSingle;
+      document.getElementById("tabAll").textContent = t.tabAll;
+      document.getElementById("logTitle").textContent = t.logTitle;
+      document.getElementById("simBadge").textContent = t.simBadge;
+      document.getElementById("footerText").innerHTML = t.footerText;
+      document.getElementById("clearLogText").textContent = t.clearLogText;
+      document.getElementById("thName").textContent = lang === "en" ? "Name" : "Nome";
+      document.getElementById("thWords").textContent = lang === "en" ? "Words" : "Words";
+      document.getElementById("thGroup").textContent = lang === "en" ? "Group" : "Grupo";
+      document.getElementById("thLvl").textContent = lang === "en" ? "Lvl" : "Lvl";
+      document.getElementById("thMana").textContent = lang === "en" ? "Mana" : "Mana";
+      document.getElementById("thPrem").textContent = lang === "en" ? "Prem" : "Prem";
+      document.getElementById("thRange").textContent = lang === "en" ? "Range" : "Range";
+      document.getElementById("thCd").textContent = lang === "en" ? "CD" : "CD";
+      document.getElementById("thScript").textContent = lang === "en" ? "Script" : "Script";
+      document.getElementById("statusText").textContent = lang === "en" ? "Waiting for folder..." : "Aguardando pasta...";
+      const badgeMode = document.getElementById("badgeMode");
+      if (badgeMode) badgeMode.textContent = lang === "en" ? "Tauri Mode" : "Tauri Mode";
+    }
+    function initPrefs() {
+      const savedLang = localStorage.getItem("lang") || "pt";
+      langSelect.value = savedLang;
+      applyLang(savedLang);
+    }
+    langSelect.addEventListener("change", () => {
+      const v = langSelect.value;
+      localStorage.setItem("lang", v);
+      applyLang(v);
+    });
+
 
     let spells = [];
     let lastAllCode = "";
     let pastaEntrada = "";
-
-    // --- TAURI SETUP ---
     let tauriAPI = null;
+
 
     document.addEventListener('DOMContentLoaded', async () => {
       if (window.__TAURI__) {
         tauriAPI = window.__TAURI__;
-        // Fix for Tauri v2 where invoke is in .core
         if (!tauriAPI.invoke && tauriAPI.core) {
           tauriAPI.invoke = tauriAPI.core.invoke;
         }
         console.log('Tauri API carregada com sucesso!');
       } else {
         console.error('Tauri API não encontrada. Rodando em modo browser?');
+      }
+      initPrefs();
+      const iconEl = document.getElementById('appIcon');
+      const logoText = document.querySelector('.logo-text');
+      function toggleLogo() {
+        if (iconEl && iconEl.complete && iconEl.naturalWidth > 0) {
+          iconEl.style.display = 'block';
+          if (logoText) logoText.style.display = 'none';
+        }
+      }
+      if (iconEl) {
+        if (iconEl.complete) {
+          toggleLogo();
+        } else {
+          iconEl.addEventListener('load', toggleLogo);
+          iconEl.addEventListener('error', () => {
+            if (logoText) logoText.style.display = 'flex';
+          });
+        }
       }
     });
 
@@ -628,14 +862,22 @@
       spells.forEach((s, index) => {
         const tr = document.createElement("tr");
         tr.style.cursor = "pointer";
-        tr.addEventListener("click", () => {
-          const code = generateSingleSpellRevScript(s);
+        tr.addEventListener("click", async () => {
+          if (s.convertedScript) {
+            codeOutput.textContent = s.convertedScript;
+            return;
+          }
+          let originalLua = "";
+          if (s.scriptPath && pastaEntrada) {
+            const sepLocal = pastaEntrada.includes("\\") ? "\\" : "/";
+            const scriptAbsPath = `${pastaEntrada}${sepLocal}scripts${sepLocal}${s.scriptPath}`;
+            try {
+              originalLua = await tauriAPI.invoke('read_file', { path: scriptAbsPath });
+            } catch (e) {}
+          }
+          const code = generateSingleSpellRevScript(s, originalLua);
           codeOutput.textContent = code;
         });
-
-        const vocShort = s.vocations.length
-          ? s.vocations.map(v => v.split(";")[0]).join(", ")
-          : "-";
 
         const groupClass =
           s.group === "attack"
@@ -646,12 +888,22 @@
                 ? "tag tag-healing"
                 : "tag";
 
+        const premiumIcon = s.premium ? (langSelect.value === "en" ? "Yes" : "Sim") : "-";
+        const cooldownSec = s.cooldown ? `${(s.cooldown / 1000).toFixed(1)}s` : "-";
+        const scriptName = s.scriptPath
+          ? s.scriptPath.split('/').pop().split('\\').pop().replace('.lua', '')
+          : "-";
+
         tr.innerHTML = `
-          <td>${s.name || "-"}</td>
+          <td style="font-weight: 600;">${s.name || "-"}</td>
+          <td style="color: #60a5fa; font-family: monospace; font-size: 12px;">${s.words || "-"}</td>
           <td><span class="${groupClass}">${s.group || "-"}</span></td>
           <td>${s.level || "-"}</td>
-          <td>${s.mana || "-"}</td>
-          <td>${vocShort}</td>
+          <td style="color: #38bdf8;">${s.mana || "-"}</td>
+          <td style="text-align: center;">${premiumIcon}</td>
+          <td style="text-align: center;">${s.range || "-"}</td>
+          <td style="color: #facc15; font-size: 12px;">${cooldownSec}</td>
+          <td style="color: #9ca3af; font-size: 11px; font-family: monospace;">${scriptName}</td>
         `;
         tableBody.appendChild(tr);
       });
@@ -670,7 +922,6 @@
       if (lower === "druid") return ["druid;true", "elder druid;true"];
       if (lower === "paladin") return ["paladin;true", "royal paladin;true"];
       if (lower === "knight") return ["knight;true", "elite knight;true"];
-      // Retorno genérico
       return [`${lower};true`];
     }
 
@@ -687,6 +938,7 @@
       const runes = Array.from(xml.getElementsByTagName("rune"));
 
       const all = [];
+      const spellsByWords = {};
 
       function processNode(node, type) {
         const s = new SpellData();
@@ -705,11 +957,32 @@
         s.needlearn = parseBoolAttr(node.getAttribute("needlearn"), false);
         const agg = node.getAttribute("aggressive");
         s.aggressive = agg != null ? parseBoolAttr(agg, true) : null;
-        const bw = node.getAttribute("blockwalls");
+        const bw = node.getAttribute("blockwalls") || node.getAttribute("blockWalls");
         s.blockwalls = bw != null ? parseBoolAttr(bw, false) : null;
         const rangeAttr = node.getAttribute("range");
         s.range = rangeAttr ? parseInt(rangeAttr, 10) : null;
+        const ctodAttr = node.getAttribute("casterTargetOrDirection") || node.getAttribute("casterTargetordirection") || node.getAttribute("castertargetordirection");
+        s.needCasterTargetOrDirection = ctodAttr ? parseBoolAttr(ctodAttr, false) : null;
         s.scriptPath = node.getAttribute("script") || "";
+
+        const needWpnAttr = node.getAttribute("needweapon") || node.getAttribute("needWeapon");
+        if (needWpnAttr) {
+          s.needWeapon = needWpnAttr === "1" || needWpnAttr === "true" || needWpnAttr === "yes";
+        } else {
+          s.needWeapon = false;
+        }
+
+        if (type === "rune") {
+          s.isRune = true;
+          const itemId = node.getAttribute("id");
+          s.runeItemId = itemId ? parseInt(itemId, 10) : 0;
+          s.id = s.runeItemId;
+          s.isConjuringSpell = false;
+        } else {
+          s.isRune = false;
+          s.id = 0;
+          s.isConjuringSpell = s.words && s.words.length > 0;
+        }
 
         const vocNodes = Array.from(node.getElementsByTagName("vocation"));
         const vocsFormatted = [];
@@ -725,6 +998,25 @@
         });
         s.vocations = vocsFormatted;
 
+        if (s.words) {
+          const key = s.words.toLowerCase();
+          if (spellsByWords[key]) {
+            const existing = spellsByWords[key];
+            s.vocations.forEach(v => {
+              if (!existing.vocations.includes(v)) {
+                existing.vocations.push(v);
+              }
+            });
+            if (!existing.scriptPath && s.scriptPath) {
+              existing.scriptPath = s.scriptPath;
+            }
+            console.log(`[Info] Spell duplicada mesclada: ${s.words} (${s.name})`);
+            return;
+          } else {
+            spellsByWords[key] = s;
+          }
+        }
+
         all.push(s);
       }
 
@@ -734,23 +1026,41 @@
       return all;
     }
 
-    function generateSingleSpellRevScript(s, originalLua) {
-      const baseId = parseInt(baseIdInput.value || "100", 10);
-      const idx = spells.indexOf(s);
-      const id = baseId + (idx >= 0 ? idx : 0);
-      s.id = id;
+    function cleanOldSpellFunction(luaCode) {
+      let cleaned = luaCode.replace(/function\s+onCastSpell\s*\([^)]*\)\s*return\s+combat:execute\s*\([^)]*\)\s*end\s*;?/gi, "");
+      const specificOneLinePattern = /function\s+onCastSpell\s*\(.*?\)\s*return\s+combat:execute\(.*?\)\s*end/gi;
+      cleaned = cleaned.replace(specificOneLinePattern, "");
+      const genericPattern = /function\s+onCastSpell\s*\([^)]*\)[\s\S]*?\nend/gi;
+      cleaned = cleaned.replace(genericPattern, "");
+      cleaned = cleaned.replace(/\n\n\n+/g, "\n\n");
+      return cleaned.trim();
+    }
 
-      const isRune = false;
+    function generateSingleSpellRevScript(s, originalLua) {
+      let id = s.id;
+
+      if (!s.isRune && id === 0) {
+        const baseId = parseInt(baseIdInput.value || "100", 10);
+        const idx = spells.indexOf(s);
+        id = baseId + (idx >= 0 ? idx : 0);
+        s.id = id;
+      }
+
+      const spellType = s.isRune ? "rune" : "instant";
 
       const vocStr = s.vocations.length
-        ? s.vocations.map(v => `"${v}"`).join(", ")
+        ? s.vocations.map(v => `"${v.split(';')[0]}"`).join(", ")
         : "";
 
       const parts = [];
 
       parts.push("-- gerado por Spell Converter");
-      if (originalLua) {
-        parts.push(originalLua);
+
+      if (originalLua && originalLua.trim().length > 0) {
+        parts.push("-- script original");
+        let cleanedLua = cleanOldSpellFunction(originalLua);
+        parts.push(cleanedLua);
+        parts.push("");
       } else {
         parts.push("-- [Aviso] Script original não encontrado, lógica genérica inserida.");
         parts.push("local combat = Combat()");
@@ -763,47 +1073,26 @@
         parts.push("\treturn -min, -max");
         parts.push("end");
         parts.push("");
-        parts.push("combat:setCallback(CALLBACK_PARAM_LEVELMAGICVALUE, \"onGetFormulaValues\")");
+        parts.push("combat:setCallback(CALLBACK_PARAM_LEVELMAGICVALUE, onGetFormulaValues)");
         parts.push("");
-        parts.push("local spell = Spell(\"instant\")");
-        parts.push("");
-        parts.push("function spell.onCastSpell(creature, variant)");
-        parts.push("\treturn combat:execute(creature, variant)");
-        parts.push("end");
       }
+
+      parts.push(`local spell = Spell("${spellType}")`);
       parts.push("");
-      if (!originalLua) {
-        // Se não tinha lua original, assume que o código já fechou. Mas se inserimos o combat, precisamos declarar a spell dps.
-        // O código acima já declara 'local spell = Spell...'
-        // Se TIVER originalLua, assumimos que o original lua define 'combat' e a função de callback, mas NÃO registra a spell.
-        // Adaptar scripts antigos é complexo, aqui vamos assumir que o usuário só quer o wrapper revscript.
-        // Para simplificar: se tem originalLua, a gente APENAS anexa o wrapper RevScript no final referenciando o combat?
-        // Scripts antigos geralmente retornam TRUE/FALSE no onCastSpell.
-        // RevScript novo define 'local spell = Spell(...)'.
-      }
+      parts.push("function spell.onCastSpell(creature, variant) return combat:execute(creature, variant) end");
+      parts.push("");
 
-      // Se nao injetamos o spell block no 'else' acima, injetamos agora
-      if (originalLua) {
-        parts.push("");
-        parts.push(`local spell = Spell("${isRune ? "rune" : "instant"}")`);
-        parts.push("");
-        parts.push("function spell.onCastSpell(creature, variant)");
-        parts.push("\t-- Tente adaptar a chamada do combat antigo aqui se possível");
-        parts.push("\t-- return combat:execute(creature, variant)");
-        parts.push("\treturn true");
-        parts.push("end");
-      }
-
-
-      // Configuração da Spell (Meta dados)
-      if (s.group) {
-        parts.push(`spell:group("${s.group}")`);
-      }
+      parts.push(`spell:group("${s.group || 'support'}")`);
       parts.push(`spell:id(${id})`);
+
+      if (s.isRune && s.runeItemId) {
+        parts.push(`spell:runeId(${s.runeItemId})`);
+      }
+
       if (s.name) {
         parts.push(`spell:name("${s.name}")`);
       }
-      if (s.words) {
+      if (s.words && !s.isRune) {
         parts.push(`spell:words("${s.words}")`);
       }
       if (s.level) {
@@ -815,30 +1104,47 @@
       if (s.soul !== null) {
         parts.push(`spell:soul(${s.soul})`);
       }
+
+      if (s.needWeapon) {
+        parts.push("spell:needWeapon(true)");
+      }
+
       if (s.premium) {
         parts.push("spell:isPremium(true)");
       }
+
       if (s.selftarget) {
         parts.push("spell:isSelfTarget(true)");
       }
-      if (s.cooldown) {
-        const sec = Math.round(s.cooldown / 1000);
-        parts.push(`spell:cooldown(${sec} * 1000)`);
-      }
-      if (s.groupcooldown) {
-        const secg = Math.round(s.groupcooldown / 1000);
-        parts.push(`spell:groupCooldown(${secg} * 1000)`);
-      }
-      parts.push(`spell:needLearn(${s.needlearn ? "true" : "false"})`);
-      if (s.aggressive !== null) {
-        parts.push(`spell:isAggressive(${s.aggressive ? "true" : "false"})`);
-      }
+
       if (s.range !== null) {
         parts.push(`spell:range(${s.range})`);
       }
+
+      if (s.needCasterTargetOrDirection === true) {
+        parts.push("spell:needCasterTargetOrDirection(true)");
+      }
+
+      if (s.blockwalls === true) {
+        parts.push("spell:blockWalls(true)");
+      }
+
+      let cooldownMs = s.cooldown || 2000;
+      let groupCdMs = s.groupcooldown || 2000;
+
+      parts.push(`spell:cooldown(${Math.round(cooldownMs / 1000)} * 1000)`);
+      parts.push(`spell:groupCooldown(${Math.round(groupCdMs / 1000)} * 1000)`);
+
+      parts.push(`spell:needLearn(${s.needlearn ? "true" : "false"})`);
+
+      if (s.aggressive !== null) {
+        parts.push(`spell:isAggressive(${s.aggressive ? "true" : "false"})`);
+      }
+
       if (vocStr) {
         parts.push(`spell:vocation(${vocStr})`);
       }
+
       parts.push("spell:register()");
       parts.push("");
 
@@ -851,17 +1157,16 @@
       return all;
     }
 
-    // --- TAURI INTEGRATION ---
 
     selectFolderBtn.addEventListener("click", async () => {
       try {
         if (!tauriAPI) {
-          alert("Tauri API ainda não carregou ou não foi encontrada.");
+          alert("Erro: Tauri não detectado.");
           return;
         }
 
         const folder = await tauriAPI.invoke('select_folder');
-        if (!folder) return; // cancelado
+        if (!folder) return;
 
         pastaEntrada = folder;
         basePathInput.value = folder;
@@ -869,10 +1174,6 @@
         statusText.textContent = "Lendo spells.xml...";
         statusText.parentElement.classList.add("status-warn");
 
-        // Tenta ler spells.xml
-        // Caminho pode ser pasta/spells.xml
-        // Nota: para compatibilidade melhor, o correto seria usar path.join no backend, mas aqui concat é aceitável se for Windows.
-        // Vamos assumir separador "/" ou "\"
         const sep = folder.includes("\\") ? "\\" : "/";
         const xmlPath = `${folder}${sep}spells.xml`;
 
@@ -886,17 +1187,18 @@
           updateTable();
           log(`Lido spells.xml com ${spells.length} entradas.`);
 
-          // Listando scripts lua como teste
-          const scriptsPath = `${folder}${sep}scripts`;
-          try {
-            const luaFiles = await tauriAPI.invoke('list_files', { folder: scriptsPath, extension: 'lua' });
-            log(`Encontrados ${luaFiles.length} arquivos .lua na pasta scripts.`);
-          } catch (err) {
-            log("Pasta 'scripts' não encontrada ou vazia: " + err);
-          }
-
           if (spells.length) {
-            codeOutput.textContent = generateSingleSpellRevScript(spells[0]);
+            if (spells[0].scriptPath) {
+              const scriptAbsPath = `${pastaEntrada}${sep}scripts${sep}${spells[0].scriptPath}`;
+              try {
+                const lua = await tauriAPI.invoke('read_file', { path: scriptAbsPath });
+                codeOutput.textContent = generateSingleSpellRevScript(spells[0], lua);
+              } catch (e) {
+                codeOutput.textContent = generateSingleSpellRevScript(spells[0]);
+              }
+            } else {
+              codeOutput.textContent = generateSingleSpellRevScript(spells[0]);
+            }
           }
 
         } catch (err) {
@@ -922,7 +1224,7 @@
       }
 
       const sep = pastaEntrada.includes("\\") ? "\\" : "/";
-      const outputFolder = `${pastaEntrada}${sep}saida`;
+      const outputFolder = `${pastaEntrada}${sep}converter`;
 
       log(`Iniciando conversão de ${spells.length} spells...`);
       progressBar.style.width = "0%";
@@ -940,33 +1242,19 @@
 
         const spell = spells[i];
         let content = "";
-
-        // Tentar ler o script original se existir path
         let originalLua = "";
+
         if (spell.scriptPath) {
           const scriptAbsPath = `${pastaEntrada}${sep}scripts${sep}${spell.scriptPath}`;
-          // tenta ler
           try {
             originalLua = await tauriAPI.invoke('read_file', { path: scriptAbsPath });
           } catch (e) {
-            // ignorar erro, usa template
             log(`[Aviso] Script não achado: ${spell.scriptPath}`);
           }
         }
 
         content = generateSingleSpellRevScript(spell, originalLua);
-
-        // Nome do arquivo de saída
-        let outName = spell.scriptPath
-          ? spell.scriptPath.replace(/\//g, "_").replace(/\\/g, "_")
-          : `spell_${spell.id}.lua`;
-
-        // Se scriptPath for algo como "attack/berserk.lua", a gente salva como "attack_berserk.lua" ou cria pasta?
-        // Simplificação: salvar tudo flat na pasta de saida ou manter estrutura?
-        // User disse "save_file(path, content)". O backend cria pastas pais.
-        // Vamos tentar manter a estrutura relativa se possível ou só jogar na raiz da saida.
-        // Vamos usar o nome da spell sanitizado para garantir
-        // Se scriptPath existe, usa ele. "attack/berserk.lua" -> "saida/attack/berserk.lua"
+        spell.convertedScript = content;
 
         let relPath = spell.scriptPath || `custom/${spell.name.replace(/\s+/g, '_')}.lua`;
         const finalPath = `${outputFolder}${sep}${relPath}`;
@@ -981,9 +1269,8 @@
         const pct = Math.round((i / total) * 100);
         progressBar.style.width = pct + "%";
 
-        // Pequeno delay para não travar UI e ver a barra andar (opcional, pode ser removido pra velocidade máxima)
-        if (i % 5 === 0) {
-          setTimeout(step, 10);
+        if (i % 10 === 0) {
+          setTimeout(step, 5);
         } else {
           step();
         }
@@ -1001,13 +1288,11 @@
         tabs.forEach(t => t.classList.remove("active"));
         tab.classList.add("active");
         if (tab.dataset.tab === "single") {
+          log("Nota: Visualização single utiliza apenas dados do XML ou o último carregado.");
           if (spells.length) {
             codeOutput.textContent = generateSingleSpellRevScript(spells[0]);
-          } else {
-            codeOutput.textContent = "-- Nenhuma spell carregada.";
           }
         } else {
-          // all
           if (!lastAllCode && spells.length) {
             lastAllCode = generateAllCode();
           }

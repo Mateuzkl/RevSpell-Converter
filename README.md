@@ -44,6 +44,23 @@ Choose an option:
 - Test Release (.exe)
 - Clean Only
 
+### Build outputs (Windows)
+
+After a successful build, you will find:
+- Portable executable:
+  - `src-tauri\target\release\spell-converter.exe`
+  - Run directly without installing
+- Installer (MSI):
+  - `src-tauri\target\release\bundle\msi\Spell Converter_1.0.0_x64_en-US.msi`
+  - Installs the app on your PC with Start Menu entry and uninstall support
+- Installer (NSIS setup):
+  - `src-tauri\target\release\bundle\nsis\Spell Converter_1.0.0_x64-setup.exe`
+  - Classic setup wizard installer
+
+Pick one:
+- Quick use → double-click `spell-converter.exe`
+- Install on your PC → run the MSI or the NSIS setup
+
 ### Manual
 
 ```bash
