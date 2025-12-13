@@ -1,89 +1,85 @@
-# Spell Converter - TFS
+# RevSpell Converter (TFS RevScript)
 
-Desktop tool developed with Tauri + Rust for converting and managing TFS files.
+RevSpell Converter reads `spells.xml` from a TFS-based server and generates modern RevScript Lua files. It preserves original combat logic when available and wraps it into a clean `Spell("instant"|"rune")` interface.
 
-## 📋 Prerequisites
+## Features
 
-Before starting, ensure you have the following installed on your machine:
+- XML parsing for `instant` and `rune` entries
+- Duplicate words handling by merging vocations
+- ID rules
+  - Runes use XML `itemID`
+  - Normal and conjuring spells use sequential IDs starting from a base (default `100`)
+- Output structure
+  - `saida/runes/{group}/...`
+  - `saida/spells/{group}/...`
+  - `saida/conjuring/...`
+- Lua generation
+  - Keeps original Lua combat on top and calls `combat:execute(creature, var)`
+  - Adds required spell configs (group, id, name, words, level, mana, vocations)
+  - Applies defaults when missing (`cooldown`, `groupCooldown`)
+  - Reads XML flags like `needWeapon`, `casterTargetOrDirection`, `blockwalls`, `range`
+- UI
+  - Dark theme
+  - Language toggle `PT/EN`
+  - Full table with Words, Premium, Range, Cooldown, Script
+  - Preview shows the original callback when available
 
-1.  **Rust** (Programming Language)
-    - Download and install: [https://rustup.rs/](https://rustup.rs/)
-    - During installation, select the default option.
+## Requirements
 
-2.  **Visual Studio Build Tools** (For compiling C++ on Windows)
-    - Required for compiling Rust dependencies.
-    - Download "Visual Studio Build Tools" and install the "Desktop development with C++" workload.
+- Windows
+- Rust toolchain (stable)
+- Tauri prerequisites for Windows (MSVC, WebView2)
 
-3.  **WebView2** (Already installed on updated Windows 10/11)
-    - Tauri uses Edge's WebView2 to render the interface.
+## How to Run
 
-4.  **Tauri CLI** (Command Line Tool)
-    - After installing Rust, run in your terminal:
-      ```powershell
-      cargo install tauri-cli
-      ```
+### Using the build script (recommended)
 
----
+- Portuguese: run `build_pt.bat`
+- English: run `build_eng.bat`
 
-## 🚀 How to Run the Project
+Choose an option:
+- Fast Build (Incremental)
+- Clean and Build (Full)
+- Run in DEV
+- Test Release (.exe)
+- Clean Only
 
-This project includes a `build.bat` script to facilitate all operations.
+### Manual
 
-### 1. Clone and Prepare
-If you just downloaded the project, make sure Rust is installed and updated.
+```bash
+cd src-tauri
+cargo tauri dev
+# or
+cargo tauri build
+```
 
-### 2. Run in Development Mode
-To test the application while editing the code (with hot-reload):
+## Usage
 
-1.  Run the `build.bat` file.
-2.  Choose option **[3] 🏃 Run in DEV**.
+1. Open the app
+2. Click “Escolher Pasta” / “Choose Folder” and select the folder containing `spells.xml`
+3. Set Base ID if needed (default `100`)
+4. Click “Salvar RevScripts”
+5. Generated files are placed under `saida/` following the folder rules above
 
-This will compile the Rust backend and open the application window.
+## Contributing
 
----
+Pull requests are welcome. Just make sure you are using English language.
 
-## 📦 How to Build (.exe)
+Suggested areas to improve:
+- Support for additional XML attributes and edge cases
+- Better handling of special groups (custom, house, party)
+- More validations for duplicate words and conflicting IDs
+- Additional language strings (EN/PT) for footer and badges
+- Optional export formats or script naming strategies
 
-To generate the final executable for distribution:
+Workflow:
+- Fork the repo
+- Create a topic branch
+- Add tests or reproducible examples when possible
+- Open a PR describing the change and reasoning in English
 
-1.  Run the `build.bat` file.
-2.  Choose one of the build options:
-    - **[1] ⚡ Fast Build:** Uses existing cache (faster).
-    - **[2] 🧹 Clean & Build:** Cleans everything and builds from scratch (recommended for final builds or if strange errors occur).
+## Notes
 
-The executable will be generated at:
-`src-tauri/target/release/spell-converter.exe`
-
----
-
-## 🛠️ Project Structure
-
-- **src/**: Contains Frontend code (HTML, CSS, JS).
-  - `index.html`: Main interface.
-  - `styles.css`: Application styles.
-  - `main.js`: Frontend logic and backend communication.
-- **src-tauri/**: Contains Backend code (Rust).
-  - `src/main.rs`: Main Rust logic, Tauri commands, and file manipulation.
-  - `tauri.conf.json`: Window configurations, permissions, and build settings.
-- **build.bat**: Utility script to facilitate building and running.
-
-## 📝 Manual Commands (Optional)
-
-If you prefer not to use `build.bat`, you can run commands directly in the terminal within the `src-tauri` folder:
-
-- **Dev:** `cargo tauri dev`
-- **Build:** `cargo tauri build`
-- **Clean:** `cargo clean`
-
----
-
-## ⚠️ Common Troubleshooting
-
-- **Error "tauri command not found":**
-  Ensure you have installed the CLI: `cargo install tauri-cli`.
-
-- **Linker Error (link.exe):**
-  Check if Visual Studio Build Tools with C++ is correctly installed.
-
-- **White screen or connection error:**
-  Check if another process is using the same port or if your antivirus is blocking the executable.
+- Secrets or keys should never be committed
+- Generated Lua scripts follow RevScript conventions
+- The tool aims to minimize manual adjustments while staying compatible with legacy combat code
